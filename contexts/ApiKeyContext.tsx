@@ -6,7 +6,7 @@ interface ApiKeyContextType {
     hasKey: boolean;
 }
 
-const ApiKeyContext = createContext<ApiKeyContextType>({ apiKey: '', setApiKey: () => {}, hasKey: false });
+const ApiKeyContext = createContext<ApiKeyContextType>({ apiKey: '', setApiKey: () => { }, hasKey: false });
 
 export const ApiKeyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [apiKey, setApiKeyState] = useState('');
@@ -21,9 +21,10 @@ export const ApiKeyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }, []);
 
     const setApiKey = (key: string) => {
-        setApiKeyState(key);
-        if (key) {
-            localStorage.setItem('gemini_api_key', key);
+        const trimmedKey = key.trim();
+        setApiKeyState(trimmedKey);
+        if (trimmedKey) {
+            localStorage.setItem('gemini_api_key', trimmedKey);
             setHasKey(true);
         } else {
             localStorage.removeItem('gemini_api_key');

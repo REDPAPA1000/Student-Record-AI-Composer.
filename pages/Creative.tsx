@@ -98,7 +98,7 @@ const CreativeScreen: React.FC = () => {
         const randomVariance = variances[Math.floor(Math.random() * variances.length)];
 
         try {
-            const ai = new GoogleGenAI({ apiKey: apiKey });
+            const genAI = new GoogleGenerativeAI(apiKey);
 
             // Construct input data from the list
             const activitiesData = activities.map((item, index) => {
@@ -142,17 +142,20 @@ ${activitiesData}
 ### [금지 사항]
 - 거창한 미래 포부로 마무리 금지. 사교육, 수상 실적 언급 금지.`;
 
-            const response = await ai.models.generateContent({
-                model: 'gemini-1.5-flash',
+            const model = genAI.getGenerativeModel({
+                model: "gemini-1.5-flash",
                 systemInstruction: { parts: [{ text: systemInstruction }] },
-                contents: [{ role: 'user', parts: [{ text: inputData }] }],
-                config: {
+                generationConfig: {
                     temperature: 0.9,
                     maxOutputTokens: 2500,
-                }
+                },
             });
 
-            setPrompt(response.text || "생성된 내용이 없습니다.");
+            const result = await model.generateContent(inputData);
+            const response = await result.response;
+            const text = response.text();
+
+            setPrompt(text || "생성된 내용이 없습니다.");
         } catch (error) {
             console.error("AI Generation Error:", error);
             setPrompt("오류가 발생했습니다. 잠시 후 다시 시도해주세요. (API 키가 유효한지 확인해주세요)");

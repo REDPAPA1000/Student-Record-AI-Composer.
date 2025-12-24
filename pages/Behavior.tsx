@@ -42,7 +42,7 @@ const BehaviorScreen: React.FC = () => {
         const randomVariance = variances[Math.floor(Math.random() * variances.length)];
 
         try {
-            const ai = new GoogleGenAI({ apiKey: apiKey });
+            const genAI = new GoogleGenerativeAI(apiKey);
 
             const systemInstruction = `당신은 대한민국 고등학교 교사로서 나이스(NEIS)에 입력할 '행동특성 및 종합의견'을 작성하는 전문가입니다.
 
@@ -60,17 +60,20 @@ const BehaviorScreen: React.FC = () => {
 ### [금지 사항]
 - 사교육, 수상 실적, 신체적 특징, 접속사(하지만, 또한 등) 과다 사용 금지.`;
 
-            const response = await ai.models.generateContent({
-                model: 'gemini-1.5-flash',
-                systemInstruction: { parts: [{ text: systemInstruction }] },
-                contents: [{ role: 'user', parts: [{ text: `[관찰 내용]\n${observation}` }] }],
-                config: {
+            const model = genAI.getGenerativeModel({
+                model: "gemini-1.5-flash",
+                systemInstruction: systemInstruction,
+                generationConfig: {
                     temperature: 0.9, // Increased for variety
                     maxOutputTokens: 2000,
                 }
             });
 
-            setPrompt(response.text || "생성된 내용이 없습니다.");
+            const result = await model.generateContent(`[관찰 내용]\n${observation}`);
+            const response = await result.response;
+            const text = response.text();
+
+            setPrompt(text || "생성된 내용이 없습니다.");
         } catch (error) {
             console.error("AI Generation Error:", error);
             setPrompt("오류가 발생했습니다. 잠시 후 다시 시도해주세요. (API 키가 유효한지 확인해주세요)");

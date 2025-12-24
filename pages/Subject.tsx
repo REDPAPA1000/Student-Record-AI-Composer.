@@ -74,7 +74,7 @@ const SubjectScreen: React.FC = () => {
         const randomVariance = variances[Math.floor(Math.random() * variances.length)];
 
         try {
-            const ai = new GoogleGenAI({ apiKey: apiKey });
+            const genAI = new GoogleGenerativeAI(apiKey);
 
             const inputData = `
 [과목 정보]
@@ -103,17 +103,16 @@ ${details || "해당 과목의 교육과정에 맞는 탐구 활동 및 우수�
 ### [금지 사항]
 - 사교육, 성적 수치, 수상 실적 언급 금지.`;
 
-            const response = await ai.models.generateContent({
-                model: 'gemini-1.5-flash',
-                systemInstruction: { parts: [{ text: systemInstruction }] },
-                contents: [{ role: 'user', parts: [{ text: inputData }] }],
-                config: {
-                    temperature: 0.9,
-                    maxOutputTokens: 2000,
-                }
+            const model = genAI.getGenerativeModel({
+                model: "gemini-1.5-flash",
+                systemInstruction: systemInstruction
             });
 
-            setPrompt(response.text || "생성된 내용이 없습니다.");
+            const result = await model.generateContent(inputData);
+            const response = await result.response;
+            const text = response.text();
+
+            setPrompt(text || "생성된 내용이 없습니다.");
         } catch (error) {
             console.error("AI Generation Error:", error);
             setPrompt("오류가 발생했습니다. 잠시 후 다시 시도해주세요. (API 키가 유효한지 확인해주세요)");
