@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../components/Header.tsx';
 import ResultPanel from '../components/ResultPanel.tsx';
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useApiKey } from '../contexts/ApiKeyContext.tsx';
 
 const BehaviorScreen: React.FC = () => {
