@@ -100,6 +100,32 @@ const CreativeScreen: React.FC = () => {
         try {
             const ai = new GoogleGenAI({ apiKey: apiKey });
 
+            // Construct input data from the list
+            const activitiesData = activities.map((item, index) => {
+                if (isClub) {
+                    // Club: Content only
+                    return `
+[활동 ${index + 1}]
+- 활동내용: ${item.content}
+                    `.trim();
+                } else {
+                    // Auto/Career: Date, Name, Content
+                    return `
+[활동 ${index + 1}]
+- 날짜: ${item.date}
+- 활동명: ${item.name}
+- 활동내용: ${item.content}
+                    `.trim();
+                }
+            }).join("\n");
+
+            const inputData = `
+[선택된 영역] ${activityType}
+
+[입력된 활동 리스트]
+${activitiesData}
+            `.trim();
+
             const systemInstruction = `당신은 대한민국 고등학교 교사로서 나이스(NEIS)에 입력할 '창의적 체험활동 특기사항'을 작성하는 전문가입니다. 
 입력된 활동 리스트를 바탕으로 생활기록부를 작성하십시오.
 

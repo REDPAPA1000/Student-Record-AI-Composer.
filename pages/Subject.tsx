@@ -76,6 +76,17 @@ const SubjectScreen: React.FC = () => {
         try {
             const ai = new GoogleGenAI({ apiKey: apiKey });
 
+            const inputData = `
+[과목 정보]
+- 과목명: ${subject}
+
+[수업 태도 및 관찰]
+${attitude || "수업 태도가 바르고 성실함"}
+
+[평가 및 탐구 활동 내용 (우수성 포함)]
+${details || "해당 과목의 교육과정에 맞는 탐구 활동 및 우수성 내용을 창의적으로 생성"}
+            `.trim();
+
             const systemInstruction = `당신은 대한민국 고등학교 교사로서 나이스(NEIS)에 입력할 '교과 세부능력 및 특기사항(세특)'을 작성하는 전문가입니다.
 
 ### [핵심 목표: 분량 확보 및 학업 역량 부각]
