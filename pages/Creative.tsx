@@ -144,7 +144,7 @@ ${activitiesData}
 
             const model = genAI.getGenerativeModel({
                 model: "gemini-1.5-flash",
-                systemInstruction: { parts: [{ text: systemInstruction }] },
+                systemInstruction: systemInstruction,
                 generationConfig: {
                     temperature: 0.9,
                     maxOutputTokens: 2500,
