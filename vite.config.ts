@@ -6,5 +6,5 @@ export default defineConfig({
   build: {
     outDir: 'dist',
   },
-  base: './', // Ensures relative paths for assets so it works on any host
+  base: '/Student-Record-AI-Composer./',
 });
