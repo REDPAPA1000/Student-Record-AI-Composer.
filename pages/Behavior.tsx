@@ -62,9 +62,9 @@ const BehaviorScreen: React.FC = () => {
 
             const response = await ai.models.generateContent({
                 model: 'gemini-1.5-flash',
-                contents: `[관찰 내용]\n${observation}`,
+                systemInstruction: { parts: [{ text: systemInstruction }] },
+                contents: [{ role: 'user', parts: [{ text: `[관찰 내용]\n${observation}` }] }],
                 config: {
-                    systemInstruction: systemInstruction,
                     temperature: 0.9, // Increased for variety
                     maxOutputTokens: 2000,
                 }

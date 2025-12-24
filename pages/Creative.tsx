@@ -144,9 +144,9 @@ ${activitiesData}
 
             const response = await ai.models.generateContent({
                 model: 'gemini-1.5-flash',
-                contents: inputData,
+                systemInstruction: { parts: [{ text: systemInstruction }] },
+                contents: [{ role: 'user', parts: [{ text: inputData }] }],
                 config: {
-                    systemInstruction: systemInstruction,
                     temperature: 0.9,
                     maxOutputTokens: 2500,
                 }

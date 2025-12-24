@@ -105,9 +105,9 @@ ${details || "해당 과목의 교육과정에 맞는 탐구 활동 및 우수�
 
             const response = await ai.models.generateContent({
                 model: 'gemini-1.5-flash',
-                contents: inputData,
+                systemInstruction: { parts: [{ text: systemInstruction }] },
+                contents: [{ role: 'user', parts: [{ text: inputData }] }],
                 config: {
-                    systemInstruction: systemInstruction,
                     temperature: 0.9,
                     maxOutputTokens: 2000,
                 }
