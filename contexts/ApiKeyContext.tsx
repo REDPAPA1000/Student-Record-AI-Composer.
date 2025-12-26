@@ -15,8 +15,13 @@ export const ApiKeyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     useEffect(() => {
         const stored = localStorage.getItem('gemini_api_key');
         if (stored) {
-            setApiKeyState(stored);
-            setHasKey(true);
+            const cleaned = stored.trim();
+            setApiKeyState(cleaned);
+            setHasKey(!!cleaned);
+            // 만약 불필요한 공백이 있었다면 로컬 스토리지도 즉시 업데이트하여 정화
+            if (stored !== cleaned) {
+                localStorage.setItem('gemini_api_key', cleaned);
+            }
         }
     }, []);
 

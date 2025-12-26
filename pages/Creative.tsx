@@ -156,9 +156,17 @@ ${activitiesData}
             const text = response.text();
 
             setPrompt(text || "생성된 내용이 없습니다.");
-        } catch (error) {
+        } catch (error: any) {
             console.error("AI Generation Error:", error);
-            setPrompt("오류가 발생했습니다. 잠시 후 다시 시도해주세요. (API 키가 유효한지 확인해주세요)");
+            let errorMessage = "오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+
+            if (error.message?.includes("API key not valid") || error.message?.includes("API_KEY_INVALID")) {
+                errorMessage = "API 키가 유효하지 않습니다. [설정] 메뉴에서 키의 오타나 앞뒤 공백을 확인해주시고, 올바른 키를 다시 입력해주세요.";
+            } else if (error.message?.includes("quota") || error.message?.includes("429")) {
+                errorMessage = "API 사용 한도를 초과했습니다. 잠시 후 다시 시도하거나 다른 키를 사용해주세요.";
+            }
+
+            setPrompt(errorMessage);
         } finally {
             setIsLoading(false);
         }
